@@ -1,4 +1,5 @@
 import { Coin } from '@/types/Coin';
+import { CoinHistory } from '@/types/CoinHistory';
 
 const getCoinsUrl = (path: string) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -6,7 +7,7 @@ const getCoinsUrl = (path: string) => {
   return `${baseUrl}/coins${path}`;
 };
 
-export const getTopCoins = async (): Promise<Coin[]> => {
+export const fetchTopCoins = async (): Promise<Coin[]> => {
   try {
     const headers = new Headers();
 
@@ -27,7 +28,9 @@ export const getTopCoins = async (): Promise<Coin[]> => {
   }
 };
 
-export const getCoinPriceHistory = async (id: string): Promise<number[]> => {
+export const fetchCoinPriceHistory = async (
+  id: string
+): Promise<CoinHistory> => {
   try {
     const headers = new Headers();
 
@@ -44,11 +47,11 @@ export const getCoinPriceHistory = async (id: string): Promise<number[]> => {
     return data;
   } catch (error) {
     console.error(error);
-    return [];
+    return { prices: [] } as CoinHistory;
   }
 };
 
-export const getCoin = async (id: string): Promise<Coin> => {
+export const fetchCoin = async (id: string): Promise<Coin> => {
   try {
     const headers = new Headers();
 
@@ -62,7 +65,6 @@ export const getCoin = async (id: string): Promise<Coin> => {
     });
 
     const data = await response.json();
-    console.log('data', data);
     return data;
   } catch (error) {
     console.error(error);
