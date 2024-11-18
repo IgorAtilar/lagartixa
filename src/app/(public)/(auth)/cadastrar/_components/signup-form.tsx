@@ -127,7 +127,7 @@ export function SignupForm() {
           )}
         />
         <Button className='w-full' type='submit' disabled={isSubmitting}>
-          Entrar
+          Cadastrar
         </Button>
       </form>
     </Form>

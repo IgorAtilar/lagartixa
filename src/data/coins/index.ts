@@ -1,4 +1,4 @@
-import { Coin } from '@/types/Coin';
+import { Coin, CoinDetails, SearchCoin } from '@/types/Coin';
 import { CoinHistory } from '@/types/CoinHistory';
 
 const getCoinsUrl = (path: string) => {
@@ -51,7 +51,7 @@ export const fetchCoinPriceHistory = async (
   }
 };
 
-export const fetchCoin = async (id: string): Promise<Coin> => {
+export const fetchCoin = async (id: string): Promise<CoinDetails> => {
   try {
     const headers = new Headers();
 
@@ -68,6 +68,27 @@ export const fetchCoin = async (id: string): Promise<Coin> => {
     return data;
   } catch (error) {
     console.error(error);
-    return {} as Coin;
+    return {} as CoinDetails;
+  }
+};
+
+export const searchCoins = async (query: string): Promise<SearchCoin[]> => {
+  try {
+    const headers = new Headers();
+
+    headers.append('Content-Type', 'application/json');
+
+    const url = getCoinsUrl(`/search/${query}`);
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers,
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 };

@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { getDashboardUrl, getLoginUrl, getSignupUrl } from './helpers/urls';
+import {
+  getCoinUrl,
+  getDashboardUrl,
+  getLoginUrl,
+  getSearchUrl,
+  getSignupUrl,
+} from './helpers/urls';
 
 // 1. Specify protected and public routes
-const protectedRoutes = [getDashboardUrl()];
+const protectedRoutes = [getDashboardUrl(), getSearchUrl(), getCoinUrl('')];
 const publicRoutes = [getSignupUrl(), getLoginUrl(), '/'];
 
 export default async function middleware(req: NextRequest) {
@@ -25,7 +31,7 @@ export default async function middleware(req: NextRequest) {
   if (
     isPublicRoute &&
     isLogged &&
-    !req.nextUrl.pathname.startsWith(getDashboardUrl())
+    !protectedRoutes.includes(req.nextUrl.pathname)
   ) {
     return NextResponse.redirect(new URL(getDashboardUrl(), req.nextUrl));
   }

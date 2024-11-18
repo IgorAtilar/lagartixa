@@ -3,3 +3,8 @@ export type User = {
   nickname: string;
   email: string;
 };
+
+export type UserCoin = {
+  id: string;
+  amount: number;
+};

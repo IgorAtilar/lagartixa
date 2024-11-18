@@ -1,6 +1,6 @@
 import { User } from '@/types/User';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+// import { cookies } from 'next/headers';
+// import { redirect } from 'next/navigation';
 
 const getAuthUrl = (path: string) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -64,12 +64,4 @@ export const signup = async ({
     console.error(error);
     return {} as User;
   }
-};
-
-export const logout = async () => {
-  const values = await cookies();
-
-  values.delete('token');
-
-  redirect('/');
 };
