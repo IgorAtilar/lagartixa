@@ -12,13 +12,19 @@ import { fetchCoin } from '@/data/coins';
 import { getMyCoins, removeCoin } from '@/data/user';
 import { revalidateTag } from 'next/cache';
 import Image from 'next/image';
+import Link from 'next/link';
+import { cache } from 'react';
+import { getCoinUrl } from '../../../helpers/urls';
+import { cn } from '@/lib/utils';
 
 type UserWalletProps = {
   className?: string;
 };
 
+const getCoin = cache(fetchCoin);
+
 async function CoinRow({ id, amount }: { id: string; amount: number }) {
-  const { currentPrice, image, name } = await fetchCoin(id);
+  const { currentPrice, image, name } = await getCoin(id);
   const value = currentPrice * amount;
 
   async function handleRemoveCoin() {
@@ -32,10 +38,14 @@ async function CoinRow({ id, amount }: { id: string; amount: number }) {
   return (
     <TableRow>
       <TableCell>
-        <Image src={image} alt={name} width={24} height={24} />
+        <Link
+          href={getCoinUrl(id)}
+          className='flex gap-2 items-center group hover:text-primary transition-colors'
+        >
+          <Image src={image} alt={name} width={24} height={24} />
+          {name}
+        </Link>
       </TableCell>
-      <TableCell>{name}</TableCell>
-      <TableCell>{amount}</TableCell>
       <TableCell>
         {value.toLocaleString('en-US', {
           currency: 'USD',
@@ -55,14 +65,12 @@ export async function UserWallet({ className }: UserWalletProps) {
   const coins = await getMyCoins();
 
   return (
-    <Table className={className}>
+    <Table className={cn(className, 'table-fixed')}>
       <TableCaption>Lista das suas criptomoedas salvas</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead>Logo</TableHead>
-          <TableHead>Nome</TableHead>
-          <TableHead>Quantidade</TableHead>
-          <TableHead>Valor</TableHead>
+          <TableHead>Moeda</TableHead>
+          <TableHead>Valor atual</TableHead>
           <TableHead />
         </TableRow>
       </TableHeader>

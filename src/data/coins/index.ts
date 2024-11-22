@@ -72,7 +72,9 @@ export const fetchCoin = async (id: string): Promise<CoinDetails> => {
   }
 };
 
-export const searchCoins = async (query: string): Promise<SearchCoin[]> => {
+export const fetchSearchCoins = async (
+  query: string
+): Promise<SearchCoin[]> => {
   try {
     const headers = new Headers();
 

@@ -105,6 +105,7 @@ export function SignupForm() {
               <FormControl>
                 <Input
                   type='email'
+                  autoComplete='off'
                   placeholder='Ex.: joao@gmail.com'
                   {...field}
                 />

@@ -13,26 +13,20 @@ const protectedRoutes = [getDashboardUrl(), getSearchUrl(), getCoinUrl('')];
 const publicRoutes = [getSignupUrl(), getLoginUrl(), '/'];
 
 export default async function middleware(req: NextRequest) {
-  // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    path.startsWith(route)
+  );
   const isPublicRoute = publicRoutes.includes(path);
 
-  // 3. Decrypt the session from the cookie
   const cookie = (await cookies()).get('token');
-  const isLogged = cookie ? true : false;
+  const isLogged = !!cookie;
 
-  // 4. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !isLogged) {
     return NextResponse.redirect(new URL(getLoginUrl(), req.nextUrl));
   }
 
-  // 5. Redirect to /dashboard if the user is authenticated
-  if (
-    isPublicRoute &&
-    isLogged &&
-    !protectedRoutes.includes(req.nextUrl.pathname)
-  ) {
+  if (isPublicRoute && isLogged && !isProtectedRoute) {
     return NextResponse.redirect(new URL(getDashboardUrl(), req.nextUrl));
   }
 

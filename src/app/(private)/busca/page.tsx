@@ -7,27 +7,35 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { searchCoins } from '@/data/coins';
+import { fetchSearchCoins } from '@/data/coins';
 import { getCoinUrl } from '@/helpers/urls';
 import { Plus } from 'lucide-react';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { handleAddCoin } from './actions';
+import { cache } from 'react';
 
-export const metadata: Metadata = {
-  title: 'Lagartixa | Busque por criptomoedas',
-  description: 'Encontre informações sobre criptomoedas e tokens digitais.',
-};
-
-export default async function SearchPage(props: {
+type Props = {
   searchParams?: Promise<{
     query?: string;
-    page?: string;
   }>;
-}) {
-  const searchParams = await props.searchParams;
-  const query = searchParams?.query || '';
+};
+
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
+  const { query = '' } = (await searchParams) || {};
+
+  return {
+    title: `Lagartixa | Busca por: ${query}`,
+  };
+}
+
+const searchCoins = cache(fetchSearchCoins);
+
+export default async function SearchPage({ searchParams }: Props) {
+  const { query = '' } = (await searchParams) || {};
 
   const coins = await searchCoins(query);
 
